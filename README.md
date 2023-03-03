@@ -6,3 +6,8 @@
 - iSCSI enabled (<https://openebs.io/docs/user-guides/prerequisites#gke>)
 
 > Check available storage classes: `kubectl get sc`
+
+## How to check ElasticSearch install gone well
+
+- check list of Es services: `kubectl get service -n elasticstack`
+- run port forward: `kubectl port-forward service/lili-es-es-http  9200:9200  -n elasticstack`

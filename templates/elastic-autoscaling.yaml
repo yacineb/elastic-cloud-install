@@ -1,0 +1,25 @@
+apiVersion: autoscaling.k8s.elastic.co/v1alpha1
+kind: ElasticsearchAutoscaler
+metadata:
+  name: autoscaler
+spec:
+  ## The name of the Elasticsearch cluster to be scaled automatically.
+  elasticsearchRef:
+    name: lili-es
+  ## The autoscaling policies.
+  policies:
+    - name: data-ingest
+      roles: ["data", "ingest" , "transform"]
+      resources:
+        nodeCount:
+          min: 2
+          max: 10
+        cpu:
+          min: 2
+          max: 8
+        memory:
+          min: 2Gi
+          max: 16Gi
+        storage:
+          min: 64Gi
+          max: 512Gi

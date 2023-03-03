@@ -1,0 +1,67 @@
+## CRD documentation through `kubectl describe crd elasticsearch`
+
+# See roles https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-node.html
+# see nodes affinity https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-advanced-node-scheduling.html
+
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
+metadata:
+  name: lili-es
+spec:
+  # image: {{ registry_endpoint }}/{{ registry_project }}/elasticsearch:{{ elastic_stack_version }}
+  version: {{ elastic_stack_version }}
+  http:
+    tls:
+      selfSignedCertificate:
+        disabled: true
+  podDisruptionBudget:
+    spec:
+      minAvailable: 2
+      selector:
+        matchLabels:
+          elasticsearch.k8s.elastic.co/cluster-name: lili-es
+  nodeSets:
+  - name: master-nodes-dedicated
+    count: 1
+    config:
+      node.roles: ["master"]
+      node.store.allow_mmap: false # virtual memory custmization (turn on when previleged container not working)
+    volumeClaimTemplates:
+    - metadata:
+        name: elasticsearch-data
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 10Gi
+        storageClassName: {{ storage_class }}
+
+  - name: data-ingest-nodes
+    count: 2
+    podTemplate:
+      spec:
+        affinity:
+          podAntiAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100 # anti-affinity rule: prevent 2 nodes from beig scheduled on the same host
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    elasticsearch.k8s.elastic.co/cluster-name: lili-es
+                topologyKey: kubernetes.io/hostname
+    config:
+      node.roles: ["data", "ingest"]
+      # xpack.ml.enabled: true
+      index.store.type: hybridfs # pick the best storage system for lucene indices
+      node.store.allow_mmap: false # virtual memory custmization (turn on when previleged container not working)
+    volumeClaimTemplates:
+    - metadata:
+        name: elasticsearch-data
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 100Gi
+        storageClassName: {{ storage_class }}
