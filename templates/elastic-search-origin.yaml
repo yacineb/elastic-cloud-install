@@ -6,7 +6,7 @@
 apiVersion: elasticsearch.k8s.elastic.co/v1
 kind: Elasticsearch
 metadata:
-  name: lili-es
+  name: {{ cluster_name }}
 spec:
   # image: {{ registry_endpoint }}/{{ registry_project }}/elasticsearch:{{ elastic_stack_version }}
   version: {{ elastic_stack_version }}
@@ -19,7 +19,7 @@ spec:
       minAvailable: 2
       selector:
         matchLabels:
-          elasticsearch.k8s.elastic.co/cluster-name: lili-es
+          elasticsearch.k8s.elastic.co/cluster-name: {{ cluster_name }}
   nodeSets:
   - name: master-nodes-dedicated
     count: 1
@@ -48,7 +48,7 @@ spec:
               podAffinityTerm:
                 labelSelector:
                   matchLabels:
-                    elasticsearch.k8s.elastic.co/cluster-name: lili-es
+                    elasticsearch.k8s.elastic.co/cluster-name: {{ cluster_name }}
                 topologyKey: kubernetes.io/hostname
     config:
       node.roles: ["data", "ingest"]

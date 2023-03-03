@@ -5,7 +5,7 @@ metadata:
 spec:
   ## The name of the Elasticsearch cluster to be scaled automatically.
   elasticsearchRef:
-    name: lili-es
+    name: {{ cluster_name }}
   ## The autoscaling policies.
   policies:
     - name: data-ingest

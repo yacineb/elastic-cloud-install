@@ -2,6 +2,7 @@
 
 
 ELASTIC_STACK_NS="elasticstack"
+CLUSTER_NAME="elasticsearch"
 
 ## Installing Elastic stack
 if [ -z "$ElasticStackVersion" ]
@@ -24,5 +25,6 @@ rm -f $TEMPLATE_PATH
 cp templates/elastic-search-origin.yaml $TEMPLATE_PATH
 sed -i -e "s,{{ elastic_stack_version }},$ElasticStackVersion,g" $TEMPLATE_PATH
 sed -i -e "s,{{ storage_class }},$TARGET_SC,g" $TEMPLATE_PATH
+sed -i -e "s,{{ cluster_name }},$CLUSTER_NAME,g" $TEMPLATE_PATH
 
 kubectl apply -f $TEMPLATE_PATH --namespace=$ELASTIC_STACK_NS

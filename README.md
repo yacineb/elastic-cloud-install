@@ -9,5 +9,6 @@
 
 ## How to check ElasticSearch install gone well
 
-- check list of Es services: `kubectl get service -n elasticstack`
-- run port forward: `kubectl port-forward service/lili-es-es-http  9200:9200  -n elasticstack`
+- check list of Es services: `kubectl get service -n $ELASTIC_STACK_NS`
+- run port forward: `kubectl port-forward service/$CLUSTER_NAME-http  9200:9200  -n elasticstack`
+- run `sh check-es.sh`
