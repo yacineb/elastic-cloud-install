@@ -10,7 +10,8 @@
 
 ## Install
 
-`install-eck.sh && install-es.sh`
+`install-eck.sh && change-storage-class.sh &&  install-es.sh`
+
 
 ## How to check ElasticSearch install gone well
 
