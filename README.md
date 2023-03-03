@@ -7,6 +7,11 @@
 
 > Check available storage classes: `kubectl get sc`
 
+
+## Install
+
+`install-eck.sh && install-es.sh`
+
 ## How to check ElasticSearch install gone well
 
 - check list of Es services: `kubectl get service -n $ELASTIC_STACK_NS`
