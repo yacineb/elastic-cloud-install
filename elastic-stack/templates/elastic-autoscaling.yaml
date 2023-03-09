@@ -5,21 +5,12 @@ metadata:
 spec:
   ## The name of the Elasticsearch cluster to be scaled automatically.
   elasticsearchRef:
-    name: {{ cluster_name }}
+    name: {{ include "elastic-stack.fullname" . }}
+    labels:
+      {{- include "elastic-stack.labels" . | nindent 4 }}
   ## The autoscaling policies.
   policies:
     - name: data-ingest
       roles: ["data", "ingest" , "transform"]
       resources:
-        nodeCount:
-          min: 2
-          max: 10
-        cpu:
-          min: 2
-          max: 8
-        memory:
-          min: 2Gi
-          max: 16Gi
-        storage:
-          min: 64Gi
-          max: 512Gi
+        {{- toYaml .Values.elasticAutoscaling | nindent 12 }}

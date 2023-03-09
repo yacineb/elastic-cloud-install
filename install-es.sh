@@ -12,7 +12,7 @@ fi
 
 if [ -z "$TARGET_SC" ]
 then
-    TARGET_SC="premium-rwo"
+    TARGET_SC="scw-bssd"
 fi
 
 echo installing elastic Search v$ElasticStackVersion

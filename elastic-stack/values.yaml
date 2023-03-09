@@ -1,0 +1,42 @@
+# Default values for elastic-stack.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+elasticSearch:
+  version: 8.6.2
+  masterNodesCount: 1
+  dataNodesCount: 2
+
+  storageClass:
+    name: "" ## todo
+
+kibana:
+  image:
+    version: 8.6.2
+  replicasCount: 1
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+podSecurityContext: {}
+
+elasticAutoscaling:
+  nodeCount:
+    min: 2
+    max: 10
+  cpu:
+    min: 2
+    max: 8
+  memory:
+    min: 2Gi
+    max: 16Gi
+  storage:
+    min: 64Gi
+    max: 512Gi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
