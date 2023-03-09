@@ -41,6 +41,13 @@ spec:
     count: 2
     podTemplate:
       spec:
+        initContainers:
+        - name: install-plugins
+          command:
+          - sh
+          - -c
+          - |
+            bin/elasticsearch-plugin install --batch repository-s3
         affinity:
           podAntiAffinity:
             preferredDuringSchedulingIgnoredDuringExecution:
