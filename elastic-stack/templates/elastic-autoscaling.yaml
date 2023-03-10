@@ -1,3 +1,4 @@
+{{- if .Values.elasticAutoscaling.enabled }}
 apiVersion: autoscaling.k8s.elastic.co/v1alpha1
 kind: ElasticsearchAutoscaler
 metadata:
@@ -13,4 +14,6 @@ spec:
     - name: data-ingest
       roles: ["data", "ingest" , "transform"]
       resources:
-        {{- toYaml .Values.elasticAutoscaling | nindent 12 }}
+        {{- toYaml .Values.elasticAutoscaling.config | nindent 12 }}
+
+{{- end }}

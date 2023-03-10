@@ -1,8 +1,4 @@
-## CRD documentation through `kubectl describe crd elasticsearch`
-
-# See roles https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-node.html
-# see nodes affinity https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-advanced-node-scheduling.html
-
+{{- if semverCompare ">=8.0.0" .Values.elasticSearch.version -}}
 apiVersion: elasticsearch.k8s.elastic.co/v1
 kind: Elasticsearch
 metadata:
@@ -10,8 +6,8 @@ metadata:
   labels:
     {{- include "elastic-stack.labels" . | nindent 4 }}
 spec:
-  # image: {{ .Values.elasticsearch.image }}
-  version: {{ .Values.elasticsearch.version }}
+  # image: {{ .Values.elasticSearch.image }}
+  version: {{ .Values.elasticSearch.version }}
   http:
     tls:
       selfSignedCertificate:
@@ -24,7 +20,7 @@ spec:
           elasticsearch.k8s.elastic.co/cluster-name: {{ include "elastic-stack.fullname" . }}
   nodeSets:
   - name: master-nodes-dedicated
-    count: {{ .Values.elasticsearch.masterNodesCount }}
+    count: {{ .Values.elasticSearch.masterNodesCount }}
     config:
       node.roles: ["master"]
       node.store.allow_mmap: false # virtual memory custmization (turn on when previleged container not working)
@@ -37,10 +33,10 @@ spec:
         resources:
           requests:
             storage: 10Gi
-        storageClassName: {{ .Values.elasticsearch.storageClass.name }}
+        storageClassName: {{ .Values.elasticSearch.storageClass.name }}
 
   - name: data-ingest-nodes
-    count: {{ .Values.elasticsearch.dataNodesCount }}
+    count: {{ .Values.elasticSearch.dataNodesCount }}
     podTemplate:
       spec:
         initContainers:
@@ -73,4 +69,12 @@ spec:
         resources:
           requests:
             storage: 100Gi
-        storageClassName: {{ .Values.elasticsearch.storageClass.name }}
+        storageClassName: {{ .Values.elasticSearch.storageClass.name }}
+
+{{- end }}
+
+
+## CRD documentation through `kubectl describe crd elasticsearch`
+
+# See roles https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-node.html
+# see nodes affinity https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-advanced-node-scheduling.html

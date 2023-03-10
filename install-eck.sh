@@ -27,7 +27,7 @@ crd_apmservers_status="false"
 until [ "$crd_apmservers_status" = "True" ]; do sleep 1; printf "."; crd_apmservers_status=`kubectl get customresourcedefinitions apmservers.apm.k8s.elastic.co -o jsonpath='{.status.conditions[1].status}' 2>&1`; done
 
 crd_elasticsearches_status="false"
-until [ "$crd_elasticsearches_status" = "True" ]; do sleep 1; printf "."; crd_elasticsearches_status=`kubectl get customresourcedefinitions elasticsearches.elasticsearch.k8s.elastic.co -o jsonpath='{.status.conditions[1].status}' 2>&1`; done
+until [ "$crd_elasticsearches_status" = "True" ]; do sleep 1; printf "."; crd_elasticsearches_status=`kubectl get customresourcedefinitions elasticsearches.elasticSearch.k8s.elastic.co -o jsonpath='{.status.conditions[1].status}' 2>&1`; done
 
 crd_kibanas_status="false"
 until [ "$crd_kibanas_status" = "True" ]; do sleep 1; printf "."; crd_kibanas_status=`kubectl get customresourcedefinitions kibanas.kibana.k8s.elastic.co -o jsonpath='{.status.conditions[1].status}' 2>&1`; done

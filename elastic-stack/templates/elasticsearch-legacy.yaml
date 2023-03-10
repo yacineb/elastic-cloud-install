@@ -1,15 +1,13 @@
-## CRD documentation through `kubectl describe crd elasticsearch`
-
-# See roles https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-node.html
-# see nodes affinity https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-advanced-node-scheduling.html
-
+{{- if semverCompare "<8.0.0" .Values.elasticSearch.version -}}
 apiVersion: elasticsearch.k8s.elastic.co/v1
 kind: Elasticsearch
 metadata:
-  name: {{ cluster_name }}
+  name: {{ include "elastic-stack.fullname" . }}
+  labels:
+    {{- include "elastic-stack.labels" . | nindent 4 }}
 spec:
-  # image: {{ registry_endpoint }}/{{ registry_project }}/elasticsearch:{{ elastic_stack_version }}
-  version: {{ elastic_stack_version }}
+  # image: {{ .Values.elasticSearch.image }}
+  version: {{ .Values.elasticSearch.version }}
   http:
     tls:
       selfSignedCertificate:
@@ -19,26 +17,10 @@ spec:
       minAvailable: 2
       selector:
         matchLabels:
-          elasticsearch.k8s.elastic.co/cluster-name: {{ cluster_name }}
+          elasticsearch.k8s.elastic.co/cluster-name: {{ include "elastic-stack.fullname" . }}
   nodeSets:
-  - name: master-nodes-dedicated
-    count: 1
-    config:
-      node.roles: ["master"]
-      node.store.allow_mmap: false # virtual memory custmization (turn on when previleged container not working)
-    volumeClaimTemplates:
-    - metadata:
-        name: elasticsearch-data
-      spec:
-        accessModes:
-        - ReadWriteOnce
-        resources:
-          requests:
-            storage: 10Gi
-        storageClassName: {{ storage_class }}
-
-  - name: data-ingest-nodes
-    count: 2
+  - name: default
+    count: {{ add .Values.elasticSearch.dataNodesCount .Values.elasticSearch.masterNodesCount }}
     podTemplate:
       spec:
         initContainers:
@@ -55,10 +37,9 @@ spec:
               podAffinityTerm:
                 labelSelector:
                   matchLabels:
-                    elasticsearch.k8s.elastic.co/cluster-name: {{ cluster_name }}
+                    elasticsearch.k8s.elastic.co/cluster-name: {{ include "elastic-stack.fullname" . }}
                 topologyKey: kubernetes.io/hostname
     config:
-      node.roles: ["data", "ingest"]
       # xpack.ml.enabled: true
       index.store.type: hybridfs # pick the best storage system for lucene indices
       node.store.allow_mmap: false # virtual memory custmization (turn on when previleged container not working)
@@ -71,4 +52,11 @@ spec:
         resources:
           requests:
             storage: 100Gi
-        storageClassName: {{ storage_class }}
+        storageClassName: {{ .Values.elasticSearch.storageClass.name }}
+{{- end }}
+
+
+## CRD documentation through `kubectl describe crd elasticsearch`
+
+# See roles https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-node.html
+# see nodes affinity https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-advanced-node-scheduling.html
