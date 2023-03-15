@@ -11,8 +11,7 @@ elasticSearch:
     name: "scw-bssd" ## default in scaleway
 
 kibana:
-  image:
-    version: 7.16.2
+  version: 7.16.2
   replicasCount: 1
 
 nameOverride: ""

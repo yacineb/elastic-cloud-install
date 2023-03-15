@@ -41,7 +41,7 @@ spec:
                 topologyKey: kubernetes.io/hostname
     config:
       # xpack.ml.enabled: true
-      index.store.type: hybridfs # pick the best storage system for lucene indices
+      # index.store.type: hybridfs # pick the best storage system for lucene indices
       node.store.allow_mmap: false # virtual memory custmization (turn on when previleged container not working)
     volumeClaimTemplates:
     - metadata:

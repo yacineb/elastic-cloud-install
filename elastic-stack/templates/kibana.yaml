@@ -1,0 +1,15 @@
+apiVersion: kibana.k8s.elastic.co/v1
+kind: Kibana
+metadata:
+  name: {{ include "elastic-stack.fullname" . }}
+  labels:
+    {{- include "elastic-stack.labels" . | nindent 4 }}
+spec:
+  version: {{ .Values.kibana.version }}
+  count: {{ .Values.kibana.replicasCount }}
+  elasticsearchRef:
+    name: {{ include "elastic-stack.fullname" . }}
+  http:
+    tls:
+      selfSignedCertificate:
+        disabled: true
