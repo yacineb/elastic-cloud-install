@@ -1,0 +1,8 @@
+podAnnotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "9108"
+    prometheus.io/scheme: http
+
+
+es:
+  uri: "" ## you should put here an anccessible http connection string for elastic with approrivate previleges
