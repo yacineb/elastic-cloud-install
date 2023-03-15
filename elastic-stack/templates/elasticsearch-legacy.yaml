@@ -23,6 +23,29 @@ spec:
     count: {{ add .Values.elasticSearch.dataNodesCount .Values.elasticSearch.masterNodesCount }}
     podTemplate:
       spec:
+        containers:
+        - name: elasticsearch
+          readinessProbe:
+            exec:
+              command:
+              - bash
+              - -c
+              - /mnt/elastic-internal/scripts/readiness-probe-script.sh
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 12
+            successThreshold: 1
+            timeoutSeconds: 12
+          env:
+          - name: ES_JAVA_OPTS
+            value: -Xms2g -Xmx2g
+          resources:
+            limits:
+              memory: 4Gi
+              cpu: 500m
+            requests:
+              memory: 4Gi
+              cpu: 500m
         initContainers:
         - name: install-plugins
           command:

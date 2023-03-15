@@ -24,13 +24,13 @@ elasticAutoscaling:
   config:
     nodeCount:
       min: 2
-      max: 10
+      max: 7
     cpu:
       min: 2
       max: 8
     memory:
       min: 2Gi
-      max: 16Gi
+      max: 8Gi
     storage:
       min: 64Gi
       max: 512Gi
